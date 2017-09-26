@@ -104,4 +104,32 @@ describe("fillArrayDate", function() {
             date: new Date("2017-08-30")
         });
     });
+
+    it("should fill with inside gab + next date", function() {
+        const arrayDate = [
+            {
+                str: "foo",
+                date: new Date("2017-05-30")
+            },
+            {
+                str: "bar",
+                date: new Date("2017-08-30")
+            }
+        ];
+
+        const result = fillArrayDate(arrayDate, endDate);
+        assert.equal(result.length, 5);
+        assert.deepEqual(result[1], {
+            str: "foo",
+            date: new Date("2017-06-30")
+        });
+        assert.deepEqual(result[2], {
+            str: "foo",
+            date: new Date("2017-07-30")
+        });
+        assert.deepEqual(result[4], {
+            str: "bar",
+            date: new Date("2017-09-30")
+        });
+    });
 });
