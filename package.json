@@ -5,7 +5,9 @@
     "main": "index.js",
     "scripts": {
         "dev": "node --require reify index.js",
-        "test": "./node_modules/.bin/mocha --require reify index.spec.js "
+        "test": "./node_modules/.bin/mocha --require reify index.spec.js ",
+        "test-watch":
+            "./node_modules/.bin/mocha --require reify --watch index.spec.js "
     },
     "author": "",
     "license": "ISC",
