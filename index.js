@@ -7,7 +7,7 @@ export const fillArrayDate = (arrayToFill, endDate = new Date()) => {
     while (lastDate.isSameOrBefore(moment.utc(endDate))) {
         lastDate = lastDate.add(1, "M");
         arrayToFill.push(
-            Object.assign({}, lastElement, { date: lastDate.clone() })
+            Object.assign({}, lastElement, { date: lastDate.clone().toDate() })
         );
     }
 

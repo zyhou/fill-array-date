@@ -3,7 +3,19 @@ import assert from "assert";
 import { fillArrayDate } from "./index";
 
 describe("fillArrayDate", function() {
-    it("should return -1 when the value is not present", function() {
-        assert.equal(-1, [1, 2, 3].indexOf(4));
+    it("should fill one next date", function() {
+        const arrayDate = [
+            {
+                str: "foo",
+                date: new Date("2017-08-30")
+            }
+        ];
+
+        const result = fillArrayDate(arrayDate);
+        assert.equal(result.length, 2);
+        assert.deepEqual(result[1], {
+            str: "foo",
+            date: new Date("2017-09-30")
+        });
     });
 });
