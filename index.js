@@ -1,14 +1,32 @@
 import moment from "moment";
 
 export const fillArrayDate = (arrayToFill, endDate = new Date()) => {
-    const lastElement = arrayToFill[arrayToFill.length - 1];
-    let lastDate = moment.utc(lastElement.date);
+    let currentElement = arrayToFill[0];
+    let currentDate = moment.utc(currentElement.date);
 
-    while (lastDate.isSameOrBefore(moment.utc(endDate))) {
-        lastDate = lastDate.add(1, "M");
-        arrayToFill.push(
-            Object.assign({}, lastElement, { date: lastDate.clone().toDate() })
-        );
+    let i = 0;
+    while (currentDate.isSameOrBefore(moment.utc(endDate))) {
+        currentElement = arrayToFill[i];
+        currentDate = moment.utc(currentElement.date);
+        currentDate = currentDate.add(1, "M").startOf("day");
+
+        if (
+            arrayToFill.findIndex(arr =>
+                moment
+                    .utc(arr.date)
+                    .startOf("day")
+                    .isSame(currentDate)
+            ) === -1
+        ) {
+            arrayToFill.splice(
+                i + 1,
+                0,
+                Object.assign({}, currentElement, {
+                    date: currentDate.clone().toDate()
+                })
+            );
+        }
+        i += 1;
     }
 
     return arrayToFill;
