@@ -14,4 +14,4 @@ Fill dates in an array containing range of dates.
   //];
 ```
 
-You can see other example in [index.spec.js](fill-array-date/index.spec.js)
+You can see other example in [index.spec.js](/index.spec.js)
