@@ -1,33 +1,38 @@
 import moment from "moment";
 
-export const fillArrayDate = (arrayToFill, endDate = new Date()) => {
-    let currentElement = arrayToFill[0];
-    let currentDate = moment.utc(currentElement.date);
+const getMissingMonths = (previous, monthdiff) => {
+    const currentDate = moment.utc(previous.date);
+    const arrayMissingMonths = [];
 
-    let i = 0;
-    while (currentDate.isSameOrBefore(moment.utc(endDate))) {
-        currentElement = arrayToFill[i];
-        currentDate = moment.utc(currentElement.date);
-        currentDate = currentDate.add(1, "M").startOf("day");
-
-        if (
-            arrayToFill.findIndex(arr =>
-                moment
-                    .utc(arr.date)
-                    .startOf("day")
-                    .isSame(currentDate)
-            ) === -1
-        ) {
-            arrayToFill.splice(
-                i + 1,
-                0,
-                Object.assign({}, currentElement, {
-                    date: currentDate.clone().toDate()
-                })
-            );
-        }
-        i += 1;
+    for (let i = 1; i < monthdiff; i += 1) {
+        arrayMissingMonths.push(Object.assign({}, previous, { date: currentDate.add(1, 'month').endOf('month').startOf('day').clone().toDate() }));
     }
 
-    return arrayToFill;
+    return arrayMissingMonths;
+};
+
+const getMonthsDiff = (startDate, endDate) => Math.round(moment.utc(endDate).diff(moment.utc(startDate), 'month', true));
+
+export const fillArrayDate = (arrayToFill) => {
+    const rangeDateArray = [...arrayToFill];
+
+    // Fill gap inside range date
+    const result = arrayToFill.reduce((filledArray, current, index) => {
+        if (index === 0) {
+            return [current];
+        }
+
+        const previous = rangeDateArray[index - 1];
+        const monthdiff = getMonthsDiff(previous.date, current.date);
+        if (monthdiff === 1) {
+            return [...filledArray, current];
+        }
+
+        return [...filledArray, current, ...getMissingMonths(previous, monthdiff)].sort((a, b) => a.date - b.date);
+    }, []);
+
+    // Complete date until now
+    const lastElement = result[result.length - 1];
+    const todayDiff = getMonthsDiff(lastElement.date, moment.utc(new Date()));
+    return [...result, ...getMissingMonths(lastElement, todayDiff + 1)];
 };
